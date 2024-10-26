@@ -1,0 +1,258 @@
+/* 颜色变量 - 为不支持 CSS 变量的浏览器提供降级颜色 */
+:root {
+    --primary-color: #3498db;
+    --primary-hover: #2980b9;
+    --text-color: #2c3e50;
+    --text-content: #1a1a1a;
+    --bg-color: #f9f9f9;
+    --container-bg: #ffffff;
+    --border-color: #e0e0e0;
+    --success-color: #2ecc71;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Reset 和基础样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif; /* 使用广泛兼容的字体 */
+    line-height: 1.6;
+    color: #2c3e50; /* 颜色降级支持 */
+    background: #f9f9f9;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* 容器样式 */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 盒子阴影 */
+    border: 1px solid #e0e0e0; /* 边框作为旧浏览器的备用 */
+}
+
+/* 标题样式 */
+h1 {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+/* 表单样式 */
+#pasteForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+textarea {
+    width: 100%;
+    min-height: 400px;
+    padding: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace; /* 兼容性更强的字体 */
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #1a1a1a;
+    font-weight: 500;
+    resize: vertical;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+/* 网格布局降级为 Flexbox */
+.options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin: 1rem 0;
+}
+
+.option {
+    width: 100%;
+    max-width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* 表单控件样式 */
+label {
+    font-weight: 500;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+select, input[type="number"] {
+    padding: 0.75rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 1rem;
+    width: 100%;
+    background: white;
+}
+
+input[type="checkbox"] {
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 4px;
+}
+
+/* 按钮样式 */
+button {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    max-width: 200px;
+}
+
+button:hover {
+    background: #2980b9;
+}
+
+/* 内容显示 */
+#content {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    border: 2px solid #e0e0e0;
+    margin-top: 1rem;
+    overflow-x: auto;
+    color: #1a1a1a;
+    font-weight: 500;
+}
+
+pre {
+    font-family: 'Courier New', monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: #1a1a1a;
+    font-weight: 500;
+}
+
+/* 信息区域 */
+.info {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 6px;
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* 解密区块 */
+#decrypt-section {
+    background: #fff3cd;
+    color: #856404;
+    padding: 1rem;
+    border-radius: 6px;
+    margin: 1rem 0;
+}
+
+#decryption-error {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-top: 1rem;
+}
+
+/* 响应式设计 */
+@media screen and (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        padding: 1rem;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    textarea {
+        min-height: 300px;
+    }
+    
+    .options {
+        flex-direction: column;
+    }
+    
+    button {
+        max-width: 100%;
+    }
+    
+    #content {
+        padding: 1rem;
+    }
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: #1a1a1a;
+        color: #e0e0e0;
+    }
+    
+    .container {
+        background: #2d2d2d;
+        border: 1px solid #404040;
+    }
+    
+    textarea, select, input[type="number"] {
+        background: #333;
+        color: #e0e0e0;
+    }
+    
+    #content {
+        background: #333;
+    }
+    
+    #decrypt-section {
+        background: #2c2c1d;
+        color: #ffd700;
+    }
+    
+    #decryption-error {
+        background: #2c1d1d;
+        color: #ff7070;
+    }
+    
+    .info {
+        background: #333;
+        color: #999;
+    }
+    
+    textarea, #content, pre {
+        color: #ffffff;
+    }
+}
