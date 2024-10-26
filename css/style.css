@@ -1,12 +1,12 @@
 /* Reset and base styles */
-::root {
+:root {
     --primary-color: #3498db;
     --primary-hover: #2980b9;
     --text-color: #2c3e50;          /* 更深的默认文本颜色 */
     --text-content: #1a1a1a;        /* 新增：笔记内容的颜色 */
     --bg-color: #f9f9f9;
     --container-bg: #ffffff;
-    --border-color: #e0e0e0;
+    --border-color: #ddd;    /* 修改为更明显的边框颜色 */
     --success-color: #2ecc71;
     --shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
 }
@@ -21,7 +21,8 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     line-height: 1.6;
     color: var(--text-color);
-    background: var(--bg-color);
+    background: var(--bg-color) url('https://image.ulaara.xyz/file/1729940342977_pFyErOU.png') no-repeat center center fixed;
+    background-size: cover;
     min-height: 100vh;
     padding: 20px;
 }
@@ -34,6 +35,15 @@ body {
     padding: 2rem;
     border-radius: 12px;
     box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.9); /* 添加半透明背景 */
+}
+
+/* 深色模式下的调整 */
+@media (prefers-color-scheme: dark) {
+    .container {
+        background-color: rgba(45, 45, 45, 0.9); /* 深色模式下的半透明背景 */
+    }
 }
 
 /* Header styling */
@@ -54,6 +64,7 @@ p {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    width: 100%;
 }
 
 textarea {
@@ -81,7 +92,12 @@ textarea:focus {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
+    width: 100%;
     margin: 1rem 0;
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--container-bg);
 }
 
 .option {
@@ -99,7 +115,8 @@ label {
     gap: 0.5rem;
 }
 
-select, input[type="number"] {
+select,
+input[type="number"] {
     padding: 0.75rem;
     border: 2px solid var(--border-color);
     border-radius: 6px;
@@ -109,7 +126,8 @@ select, input[type="number"] {
     transition: border-color 0.3s ease;
 }
 
-select:focus, input[type="number"]:focus {
+select:focus,
+input[type="number"]:focus {
     outline: none;
     border-color: var(--primary-color);
 }
@@ -121,8 +139,16 @@ input[type="checkbox"] {
     accent-color: var(--primary-color);
 }
 
+/* Button container */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 1rem;
+}
+
 /* Button styling */
-button {
+.form-actions button {
     background: var(--primary-color);
     color: white;
     border: none;
@@ -132,14 +158,42 @@ button {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 100%;
+    width: auto;
+    min-width: 150px;
     max-width: 200px;
-    align-self: flex-end;
 }
 
-button:hover {
+.form-actions button:hover {
     background: var(--primary-hover);
     transform: translateY(-1px);
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+    select,
+    input[type="number"] {
+        background: #333;
+        color: var(--text-color);
+        border-color: var(--border-color);
+    }
+
+    .options {
+        background: var(--container-bg);
+        border-color: var(--border-color);
+    }
+}
+
+/* Mobile adjustments */
+@media screen and (max-width: 768px) {
+    .options {
+        grid-template-columns: 1fr;
+        padding: 0.75rem;
+    }
+
+    .form-actions button {
+        width: 100%;
+        max-width: none;
+    }
 }
 
 /* Content display */
@@ -212,10 +266,12 @@ pre {
     
     .options {
         grid-template-columns: 1fr;
+        padding: 0.75rem;
     }
     
-    button {
-        max-width: 100%;
+    button[type="submit"] {
+        width: 100%;
+        max-width: none;
     }
     
     #content {
@@ -230,7 +286,7 @@ pre {
         --container-bg: #2d2d2d;
         --text-color: #e0e0e0;
         --text-content: #ffffff;     /* 深色模式下的内容颜色 */
-        --border-color: #404040;
+        --border-color: #555;    /* 深色模式下更明显的边框颜色 */
         --primary-color: #4dabf7;
         --primary-hover: #339af0;
     }
@@ -238,6 +294,7 @@ pre {
     select, input[type="number"], textarea {
         background: #333;
         color: var(--text-color);
+        border-color: var(--border-color);
     }
     
     #content {
@@ -266,6 +323,11 @@ pre {
     #markdown-content {
         color: var(--text-content);
     }
+    
+    .options {
+        background: var(--container-bg);
+        border-color: var(--border-color);
+    }
 }
 
 #markdown-content {
@@ -273,3 +335,338 @@ pre {
     font-weight: 500;
 }
 
+/* 编辑器容器 */
+.editor-container {
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+/* Markdown split view */
+.split-view {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    width: 100%;
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.split-view textarea {
+    min-height: 500px;
+    height: 500px;
+    resize: none;
+    width: 100%;
+    overflow-y: auto;
+}
+
+/* 修改预览窗口的选择器 */
+.split-view .markdown-preview {
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    overflow-y: auto;
+    background: var(--container-bg);  /* 使用容器背景色 */
+    height: 500px;
+    width: 100%;
+    line-height: 1.5;
+    font-size: 1rem;
+    color: var(--text-color);  /* 确保文字颜色正确 */
+}
+
+/* 深色模式下的预览窗 */
+@media (prefers-color-scheme: dark) {
+    .split-view .markdown-preview {
+        background: #333;
+        color: var(--text-color);
+    }
+}
+
+/* 确保滚动条在深色模式下可见 */
+.split-view textarea::-webkit-scrollbar,
+.split-view .markdown-preview::-webkit-scrollbar {
+    width: 8px;
+    background: transparent;
+}
+
+.split-view textarea::-webkit-scrollbar-track,
+.split-view .markdown-preview::-webkit-scrollbar-track {
+    background: var(--bg-color);
+    border-radius: 4px;
+}
+
+.split-view textarea::-webkit-scrollbar-thumb,
+.split-view .markdown-preview::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.split-view textarea::-webkit-scrollbar-thumb:hover,
+.split-view .markdown-preview::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
+
+/* 修改预览窗口中图片的样 */
+.markdown-preview img {
+    max-width: 80% !important;
+    height: auto !important;
+    display: block;
+    margin: 0.5rem auto;  /* 减小图片上下间距 */
+    max-height: 300px !important;  /* 稍微降低最大高度 */
+    object-fit: contain;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+/* 图片悬停效果 */
+.markdown-preview img:hover {
+    cursor: zoom-in;
+    opacity: 0.95;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 移动端的图片样式调整 */
+@media screen and (max-width: 768px) {
+    .markdown-preview img {
+        max-width: 90% !important;  /* 增加到90% */
+        max-height: 250px !important;
+    }
+}
+
+/* 表单选项区域 */
+#pasteForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    margin: 1rem 0;
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--container-bg);
+}
+
+/* 确保按钮区域正确定位 */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+/* 移动端的图片尺寸 */
+@media screen and (max-width: 768px) {
+    .split-view .preview img {
+        max-width: 70% !important;
+        max-height: 150px !important;
+    }
+}
+
+/* 调整图片悬停效果 */
+.split-view .preview img:hover {
+    cursor: pointer;
+    opacity: 0.9;
+}
+
+/* 调整预览窗口中的段落间距 */
+.markdown-preview p {
+    margin: 0 0 1rem 0;  /* 减小段落间距 */
+    line-height: 1.5;    /* 确保与textarea一致 */
+}
+
+/* 调整预览窗口中的图片布局 */
+.markdown-preview img {
+    max-width: 80% !important;
+    height: auto !important;
+    display: block;
+    margin: 0.5rem auto;  /* 减小图片上下间距 */
+    max-height: 300px !important;  /* 稍微降低最大高度 */
+    object-fit: contain;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+/* 调整预览窗口中的标题间距 */
+.markdown-preview h1,
+.markdown-preview h2,
+.markdown-preview h3,
+.markdown-preview h4,
+.markdown-preview h5,
+.markdown-preview h6 {
+    margin: 0.5rem 0;  /* 减小标题的上下间距 */
+    line-height: 1.5;
+}
+
+/* 调整预览窗口中的列表间距 */
+.markdown-preview ul,
+.markdown-preview ol {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+}
+
+.markdown-preview li {
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* 调整预览窗口中的代码块间距 */
+.markdown-preview pre,
+.markdown-preview code {
+    margin: 0.5rem 0;
+    line-height: 1.5;
+}
+
+/* 调整预览窗口中的引用块间距 */
+.markdown-preview blockquote {
+    margin: 0.5rem 0;
+    padding: 0.5rem 1rem;
+    line-height: 1.5;
+}
+
+/* 确保表单控件有明显的边框 */
+textarea,
+select,
+input[type="number"] {
+    border: 2px solid var(--border-color);
+    background: #ffffff;
+}
+
+/* 深色模式下的边框和背景调整 */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #1a1a1a;
+        --container-bg: #2d2d2d;
+        --text-color: #e0e0e0;
+        --text-content: #ffffff;
+        --border-color: #555;    /* 深色模式下更明显的边框颜色 */
+        --primary-color: #4dabf7;
+        --primary-hover: #339af0;
+    }
+
+    textarea,
+    select,
+    input[type="number"] {
+        background: #333;
+        border-color: var(--border-color);
+        color: var(--text-color);
+    }
+}
+
+/* 删除滚动提示样式 */
+.editor-container::after {
+    display: none;  /* 或直接删除这个样式块 */
+}
+
+/* 调整编辑器容器的边距 */
+.editor-container {
+    position: relative;
+    margin-bottom: 1.5rem;  /* 恢复原来的边距 */
+}
+
+/* 修改 split-view 相关样式 */
+.split-view {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    width: 100%;
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+/* 修改 textarea 和预览窗口的样式 */
+.split-view textarea,
+.split-view .markdown-preview {
+    height: 100%; /* 改为相对高度 */
+    min-height: 500px;
+    resize: vertical; /* 允许垂直调整大小 */
+    width: 100%;
+    overflow-y: auto;
+}
+
+/* 添加新的容器样式来同步高度 */
+.editor-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.editor-container.split-view {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* 确保预览窗口跟随 textarea 的高度 */
+.markdown-preview {
+    height: 100%;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    overflow-y: auto;
+    background: var(--container-bg);
+    line-height: 1.5;
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+/* 添加加密内容的样式规则 */
+#content #markdown-content img {
+    max-width: 80% !important;
+    height: auto !important;
+    display: block;
+    margin: 0.5rem auto;
+    max-height: 300px !important;
+    object-fit: contain;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+#content #markdown-content {
+    color: var(--text-content);
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+/* 确保加密内容的容器样式正确 */
+#content {
+    background: var(--container-bg);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    margin-top: 1rem;
+    overflow-x: auto;
+    color: var(--text-content);
+    font-weight: 500;
+    width: 100%;
+}
+
+/* 修改预览窗口中图片的样式 */
+.markdown-preview img,
+#content #markdown-content img {
+    max-width: 100% !important;  /* 改为100% */
+    height: auto !important;
+    display: block;
+    margin: 0.5rem auto;
+    max-height: 600px !important;  /* 增加最大高度 */
+    object-fit: contain;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+/* 移动端的图片样式调整 */
+@media screen and (max-width: 768px) {
+    .markdown-preview img,
+    #content #markdown-content img {
+        max-width: 100% !important;
+        max-height: 400px !important;  /* 移动端也适当增加高度 */
+    }
+}
