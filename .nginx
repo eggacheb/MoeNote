@@ -1,0 +1,14 @@
+location ~* \.(db|bak|sql)$ {
+    deny all;
+    return 403;
+}
+
+location / {
+    try_files $uri $uri/ @rewrite;
+}
+
+location @rewrite {
+    if ($uri ~* "^/([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})$") {
+        rewrite ^/(.*)$ /index.php?id=$1 last;
+    }
+}
