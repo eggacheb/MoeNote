@@ -20,11 +20,33 @@ class Settings {
         // 确保数据目录存在
         $dataDir = dirname($this->defaultSettings['db_path']);
         if (!file_exists($dataDir)) {
-            mkdir($dataDir, 0755, true);
+            if (!mkdir($dataDir, 0755, true)) {
+                throw new Exception('无法创建数据目录，请检查权限');
+            }
+            
+            // 创建 .htaccess 文件来保护数据目录
+            $htaccess = $dataDir . '/.htaccess';
+            if (!file_exists($htaccess)) {
+                $htaccess_content = "Require all denied\n";
+                $htaccess_content .= "Options -Indexes\n";
+                file_put_contents($htaccess, $htaccess_content);
+            }
+            
+            // 创建 index.html
+            $index_html = $dataDir . '/index.html';
+            if (!file_exists($index_html)) {
+                file_put_contents($index_html, '<!DOCTYPE html><html><head><title>403 Forbidden</title></head><body><h1>403 Forbidden</h1></body></html>');
+            }
         }
+        
+        // 设置目录权限
+        chmod($dataDir, 0755);
         
         // 连接或创建数据库
         $this->db = new SQLite3($this->defaultSettings['db_path']);
+        
+        // 设置数据库文件权限
+        chmod($this->defaultSettings['db_path'], 0600);
         
         // 创建必要的表
         $this->db->exec('
@@ -44,6 +66,21 @@ class Settings {
                 current_views INTEGER DEFAULT 0,
                 is_markdown INTEGER DEFAULT 0,
                 is_encrypted INTEGER DEFAULT 0
+            )
+        ');
+        
+        // 在 initializeDatabase 方法中添加新表
+        $this->db->exec('
+            CREATE TABLE IF NOT EXISTS files (
+                code TEXT PRIMARY KEY,           -- 提取码
+                filename TEXT,                   -- 原始文件名
+                filepath TEXT,                   -- 存储路径
+                content TEXT,                    -- 文本内容（如果是文本类型）
+                type TEXT,                       -- 类型：file 或 text
+                created_at INTEGER,             -- 创建时间
+                expires_at INTEGER,             -- 过期时间
+                max_downloads INTEGER DEFAULT 0, -- 最大下载/查看次数
+                current_downloads INTEGER DEFAULT 0  -- 当前下载/查看次数
             )
         ');
         

@@ -3,7 +3,7 @@ header('Content-Type: application/json');
 
 // 设置允许的图片类型
 $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-$max_size = 5 * 1024 * 1024; // 5MB
+$max_size = 20 * 1024 * 1024; // 20MB
 
 try {
     // 确保上传目录存在
