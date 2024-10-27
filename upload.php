@@ -73,6 +73,35 @@ try {
     // 设置文件权限
     chmod($filepath, 0644);
     
+    // 在成功上传后添加 .htaccess 文件来设置图片缓存
+    $images_htaccess = $upload_dir . '.htaccess';
+    if (!file_exists($images_htaccess)) {
+        $cache_rules = "
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg \"access plus 1 year\"
+    ExpiresByType image/jpeg \"access plus 1 year\"
+    ExpiresByType image/gif \"access plus 1 year\"
+    ExpiresByType image/png \"access plus 1 year\"
+    ExpiresByType image/webp \"access plus 1 year\"
+</IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch \"\.(jpg|jpeg|png|gif|webp)$\">
+        Header set Cache-Control \"public, max-age=31536000\"
+    </FilesMatch>
+</IfModule>
+
+Options -Indexes
+DirectoryIndex 403.html
+AddType text/plain .php
+AddType text/plain .html
+AddType text/plain .htm
+AddType text/plain .htaccess
+";
+        file_put_contents($images_htaccess, $cache_rules);
+    }
+    
     // 返回成功响应
     echo json_encode([
         'success' => true,
